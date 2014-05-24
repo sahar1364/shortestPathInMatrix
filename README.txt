@@ -1,8 +1,8 @@
-**I tried to follow solium standards for solving the assignment (similar fileNames and similar structure)**
-
-This is a solution to the CylindricalMatrix problem from the solium programming problems document. 
-The input file for the system is located in the input directory and based on the input format mentioned in 
-the document.
+This is a solution to the CylindricalMatrix problem. Given a matrix of integers, the program computes a path of minimal weight.
+A path starts anywhere and ends anywhere in the matrix. 
+A step consists of traveling from column i to column i+1 or column i-1 in an adjacent (horizontal or diagonal) row. 
+The first and last rows (rows 1 and m) of a matrix are considered adjacent. Also, the first column and last column are adjacent 
+making a torus. 
 
 To build and view the outputs for the provided inputs:
 
