@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="CylindricalMatrix" default="help">
+    <property name="input.dir" location="./input"/>
+    <property name="lib.dir" location="./lib"/>
+    <property name="junit.jar" value="${lib.dir}/junit-4.4.jar"/>
+
+    <property name="src.dir" location="./src"/>
+    <property name="testsrc.dir" location="./test"/>
+
+    <property name="work.dir" location="./work"/>
+    <property name="build.dir" location="${work.dir}/build"/>
+    <property name="testbuild.dir" location="${work.dir}/testbuild"/>
+    <property name="dist.dir" location="${work.dir}/dist"/>
+    <property name="javadoc.dir" location="${work.dir}/javadoc"/>
+
+    <target name="init">
+        <mkdir dir="${work.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${testbuild.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${javadoc.dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${work.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" source="1.5" target="1.5"/>
+    </target>
+
+    <target name="compile.tests" depends="compile">
+        <javac srcdir="${testsrc.dir}" destdir="${testbuild.dir}" source="1.5" target="1.5">
+            <classpath>
+                <path path="${junit.jar}"/>
+                <pathelement path="${build.dir}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="run.tests" depends="clean,compile.tests">
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath>
+                <path path="${junit.jar}"/>
+                <pathelement path="${build.dir}"/>
+                <pathelement path="${testbuild.dir}"/>
+            </classpath>
+            <batchtest todir="${build.dir}">
+                <fileset dir="${testbuild.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="create.jar" depends="run.tests">
+        <jar basedir="${build.dir}" destfile="${dist.dir}/cylindricalMatrix.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.solium.main.CylindricalMatrix"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+    <target name="run.assignment" depends="run.tests">
+        <java classname="com.solium.main">
+            <arg value="${input.dir}/input.txt"/>
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="generate.javadoc" depends="init">
+        <javadoc packagenames="com.solium.*" sourcepath="${src.dir}" defaultexcludes="yes"
+                 destdir="${javadoc.dir}" windowtitle="Solium Programming Problem">
+
+            <doctitle><![CDATA[<h1>Solium CylindricalMatrix</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Written by Sahar Jazebi</i>]]></bottom>
+        </javadoc>
+    </target>
+
+    <target name="help">
+        <echo >
+			The pertinent targets in this antfile are the following:
+			
+			run.assignment - will run the build, run the tests, then run the assignment inputs
+			create.jar - will run the build, run the tests, then build a jarfile
+			run.tests - will perform a clean build and run the tests
+        </echo>
+    </target>
+
+
+</project>
